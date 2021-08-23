@@ -1,53 +1,21 @@
-import React,{useState} from 'react';
-import {Navbar} from './components/Navbar'
-import { TodoForm } from './components/TodoForm';
-import { TodoList } from './components/TodoList';
-import { InterfaceTodo } from './interfaces';
+import React from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { Navbar } from './components/Navbar'
+import { TodosPage } from './pages/TodosPage';
+import { AboutPage } from './pages/AboutPage';
 
-declare var confirm: (question: any) => boolean
+const App: React.FC = () => {
 
-const App: React.FC = () =>{
-  const [todos, setTodos] = useState<InterfaceTodo[]>([])
-
-  const addHandler=(title:string)=> {
-    const newTodo: InterfaceTodo = {
-      title: title,
-      id: Date.now(),
-      completed: false
-    }
-    if (title.length !== 0){setTodos(prev=>[newTodo, ...todos])}
-  }
-const toggleHandler= (id: number) => {
-  setTodos(prev => 
-    prev.map(todo => {
-      if (todo.id === id) {
-        return {...todo,
-          completed: !todo.completed
-        }
-      }
-    return todo
-    })
-  )
-}
-
-const removeHandler = (id: number) => {
-  const shoudRemove = confirm('Вы уверены, что хотите удалить ?')
-  if (shoudRemove) {
-    setTodos(prev=>prev.filter(todo =>todo.id !== id))
-  }
-}
   return (
-    <>
-      <Navbar/>
-        <div className="container">
-          <TodoForm onAdd={addHandler}/>
-          <TodoList 
-          todos={todos} 
-          onRemove={removeHandler} 
-          onToggle={toggleHandler}
-          />
-        </div>
-   </>
+    <BrowserRouter>
+      <Navbar />
+      <div className="container">
+        <Switch>
+          <Route component={TodosPage} path="/" exact />
+          <Route component={AboutPage} path="/about" exact />
+        </Switch>
+      </div>
+    </BrowserRouter>
   );
 }
 
